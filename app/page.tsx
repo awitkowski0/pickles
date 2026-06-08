@@ -148,7 +148,17 @@ export default function HomePage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-bold">Pickles</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl font-bold">Pickles</h1>
+          <a
+            href="https://github.com/awitkowski0/pickles"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+          >
+            GitHub
+          </a>
+        </div>
         <ParkSelector selected={selectedPark} onChange={handleParkChange} />
       </div>
       <DateRangeSelector
