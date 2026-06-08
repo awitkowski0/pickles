@@ -36,7 +36,7 @@ export default function TimelineCourt({ label, items, viewStart, viewEnd, facili
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
   const viewRange = viewEnd - viewStart;
 
-  const selectItem = useCallback((e: React.MouseEvent | React.TouchEvent, item: SlotItem) => {
+  const selectItem = useCallback((e: React.PointerEvent, item: SlotItem) => {
     e.stopPropagation();
     const rect = e.currentTarget.getBoundingClientRect();
     setTooltip((prev) => {
@@ -84,8 +84,7 @@ export default function TimelineCourt({ label, items, viewStart, viewEnd, facili
                 key={i}
                 className={`absolute top-0 h-full cursor-pointer ${isFirst ? "rounded-l-full" : ""} ${isLast ? "rounded-r-full" : ""} ${colorMap[item.kind]}`}
                 style={{ left: `${left}%`, width: `${w}%` }}
-                onClick={(e) => selectItem(e, item)}
-                onTouchEnd={(e) => selectItem(e, item)}
+                onPointerUp={(e) => selectItem(e, item)}
               />
             );
           })}
