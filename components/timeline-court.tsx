@@ -36,8 +36,7 @@ export default function TimelineCourt({ label, items, viewStart, viewEnd, facili
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
   const viewRange = viewEnd - viewStart;
 
-  const selectItem = useCallback((e: React.PointerEvent, item: SlotItem) => {
-    e.stopPropagation();
+  const selectItem = useCallback((e: React.MouseEvent, item: SlotItem) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setTooltip((prev) => {
       const text = itemToTooltip(item);
@@ -45,13 +44,6 @@ export default function TimelineCourt({ label, items, viewStart, viewEnd, facili
       return { text, x: rect.left + rect.width / 2, y: rect.top - 4 };
     });
   }, []);
-
-  useEffect(() => {
-    if (!tooltip) return;
-    const handler = () => setTooltip(null);
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, [tooltip]);
 
   const reserveLink = `https://pittsburgh.recdesk.com/Community/Facility/Reserve?facilityId=${facilityId}&r=l`;
 
@@ -80,11 +72,13 @@ export default function TimelineCourt({ label, items, viewStart, viewEnd, facili
             const isFirst = i === 0;
             const isLast = i === items.length - 1;
             return (
-              <div
+              <button
                 key={i}
-                className={`absolute top-0 h-full cursor-pointer ${isFirst ? "rounded-l-full" : ""} ${isLast ? "rounded-r-full" : ""} ${colorMap[item.kind]}`}
+                className={`absolute top-0 h-full cursor-pointer border-0 p-0 ${isFirst ? "rounded-l-full" : ""} ${isLast ? "rounded-r-full" : ""} ${colorMap[item.kind]}`}
                 style={{ left: `${left}%`, width: `${w}%` }}
-                onPointerUp={(e) => selectItem(e, item)}
+                onClick={(e) => selectItem(e, item)}
+                type="button"
+                aria-label={itemToTooltip(item)}
               />
             );
           })}
@@ -95,7 +89,7 @@ export default function TimelineCourt({ label, items, viewStart, viewEnd, facili
       </div>
       {tooltip && (
         <div
-          className="fixed z-50 px-2 py-1 rounded-md bg-zinc-900 text-white text-xs whitespace-nowrap shadow-lg"
+          className="fixed z-50 px-2 py-1 rounded-md bg-zinc-900 text-white text-xs whitespace-nowrap shadow-lg pointer-events-none"
           style={{
             left: tooltip.x,
             top: tooltip.y,
